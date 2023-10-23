@@ -77,7 +77,7 @@ for (DoubleWritable val : values) {
  sum += val.get();
 }
 
-double mean = sum/(double)N; 
+double mean = sum/Math.sqrt(N); 
 
 context.write(key, new DoubleWritable(mean));
 }
