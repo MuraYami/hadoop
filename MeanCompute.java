@@ -4,6 +4,7 @@ package main;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.lang.Math;
+import java.text.DecimalFormat;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -17,7 +18,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class MeanCompute {
-	static final int N = 9; 
+	static final int N = 10; 
 
 public static class Mapper1
   extends Mapper<Object, Text, IntWritable, IntWritable>{
@@ -69,6 +70,7 @@ while (itr.hasMoreTokens()) {
 public static class Reducer2
 extends Reducer<IntWritable,DoubleWritable,IntWritable,DoubleWritable> {
 
+	DecimalFormat df = new DecimalFormat("#.###");
 public void reduce(IntWritable key, Iterable<DoubleWritable> values,
                 Context context
                 ) throws IOException, InterruptedException {
@@ -77,7 +79,7 @@ for (DoubleWritable val : values) {
  sum += val.get();
 }
 
-double mean = sum/Math.sqrt(N); 
+double mean = Double.parseDouble(df.format((sum)/Math.sqrt(N)));
 
 context.write(key, new DoubleWritable(mean));
 }
